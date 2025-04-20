@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    volumes:
+      - backup_data:/data
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+
+volumes:
+  backup_data:
