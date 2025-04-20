@@ -6,6 +6,7 @@ import os
 app = Flask(__name__)
 init_db()
 
+
 @app.route('/backup', methods=['POST'])
 @require_auth
 def backup():
@@ -15,6 +16,7 @@ def backup():
     save_backup(file_path)
     return jsonify({"status": "backup successful"}), 200
 
+
 @app.route('/restore', methods=['POST'])
 @require_auth
 def restore():
@@ -22,10 +24,12 @@ def restore():
     restored_path = restore_backup(file_name)
     return jsonify({"status": "restored", "path": restored_path}), 200
 
+
 @app.route('/list', methods=['GET'])
 @require_auth
 def list_backups():
     return jsonify(list_files())
+
 
 @app.route('/create-user', methods=['POST'])
 @require_auth
@@ -33,3 +37,7 @@ def create_user_route():
     data = request.json
     create_user(data['username'], data['password'])
     return jsonify({'status': 'user created'})
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
