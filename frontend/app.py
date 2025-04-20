@@ -4,6 +4,8 @@ import requests
 BACKEND_URL = "http://backend:5000"
 session = {}
 
+main_view = ui.column().classes("w-full items-center")
+
 def login():
     username = session.get('username_input').value
     password = session.get('password_input').value
@@ -16,8 +18,9 @@ def login():
         ui.notify("Login failed", color='negative')
 
 def show_login():
-    ui.clear()
-    with ui.card():
+    main_view.clear()
+    with main_view:
+        ui.label("Login").classes("text-2xl font-bold")
         session['username_input'] = ui.input('Username').props('outlined')
         session['password_input'] = ui.input('Password', password=True).props('outlined')
         ui.button('Login', on_click=login)
@@ -45,24 +48,25 @@ def refresh():
         session['table'].rows = r.json()
 
 def show_dashboard():
-    ui.clear()
-    ui.label(f"Welcome, {session['auth'][0]}")
+    main_view.clear()
+    with main_view:
+        ui.label(f"Welcome, {session['auth'][0]}").classes("text-xl font-bold")
 
-    with ui.row():
-        session['backup_input'] = ui.input('Path to file').props('outlined')
-        ui.button('Backup', on_click=backup_file)
+        with ui.row():
+            session['backup_input'] = ui.input('Path to file').props('outlined')
+            ui.button('Backup', on_click=backup_file)
 
-    with ui.row():
-        session['restore_input'] = ui.input('File name to restore').props('outlined')
-        ui.button('Restore', on_click=restore_file)
+        with ui.row():
+            session['restore_input'] = ui.input('File name to restore').props('outlined')
+            ui.button('Restore', on_click=restore_file)
 
-    session['table'] = ui.table(columns=[
-        {'name': 'file_name', 'label': 'File Name', 'field': 'file_name'},
-        {'name': 'timestamp', 'label': 'Timestamp', 'field': 'timestamp'},
-    ], rows=[], row_key='file_name')
+        session['table'] = ui.table(columns=[
+            {'name': 'file_name', 'label': 'File Name', 'field': 'file_name'},
+            {'name': 'timestamp', 'label': 'Timestamp', 'field': 'timestamp'},
+        ], rows=[], row_key='file_name')
 
-    ui.button("Refresh List", on_click=refresh)
-    refresh()
+        ui.button("Refresh List", on_click=refresh)
+        refresh()
 
 show_login()
 ui.run(host="0.0.0.0", port=8080)
